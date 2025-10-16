@@ -14,7 +14,7 @@ It integrates the **Stream SDK** for communication and **OpenAI Realtime API** f
 | AI / Realtime | **OpenAI Realtime API** | Agent reasoning + streaming responses |
 | Communication | **Stream SDK** | Real-time voice & data channels |
 | Auth | **(planned)** Clerk or NextAuth | Secure multi-user authentication |
-| DB | **Drizzle ORM + Postgres** | Persistent user, agent, and session data |
+| DB | **Neon DB + Postgres + Drizzle ORM** | Persistent user, agent, and session data |
 
 ---
 
@@ -28,6 +28,9 @@ cd comind
 # 2. Install dependencies
 npm install --legacy-peer-deps
 
+#3. Environment variables
+```env
+DATABASE_URL=neon db connection string
 
 # 3. Run the dev server
 npm run dev
