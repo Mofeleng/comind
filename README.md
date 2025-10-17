@@ -13,7 +13,7 @@ It integrates the **Stream SDK** for communication and **OpenAI Realtime API** f
 | UI / Styling | **Tailwind CSS + shadcn/ui 2.5.0** | Modern, accessible component library |
 | AI / Realtime | **OpenAI Realtime API** | Agent reasoning + streaming responses |
 | Communication | **Stream SDK** | Real-time voice & data channels |
-| Auth | **(planned)** Clerk or NextAuth | Secure multi-user authentication |
+| Auth | **Better Auth** | Secure multi-user authentication |
 | DB | **Neon DB + Postgres + Drizzle ORM** | Persistent user, agent, and session data |
 
 ---
@@ -29,8 +29,9 @@ cd comind
 npm install --legacy-peer-deps
 
 #3. Environment variables
-```env
-DATABASE_URL=neon db connection string
-
+```
+DATABASE_URL
+BETTER_AUTH_SECRET
+BETTER_AUTH_URL
 # 3. Run the dev server
 npm run dev
