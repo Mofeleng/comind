@@ -10,9 +10,9 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { OctagonAlertIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 
 
 const formSchema = z.object({
@@ -21,7 +21,6 @@ const formSchema = z.object({
 });
 
 export const SignInView = () => {
-    const router = useRouter();
     const [ error, setError ] = useState<string|null>(null);
     const [ isPending, setIsPending ] = useState<boolean>(false);
 
@@ -39,11 +38,11 @@ export const SignInView = () => {
         authClient.signIn.email(
             {
                 email: data.email,
-                password: data.password
+                password: data.password,
+                callbackURL: "/"
             }, {
                 onSuccess: () => {
                     setIsPending(false);
-                    router.push("/");
                 },
                 onError: ({error}) => {
                     setIsPending(false);
@@ -51,6 +50,24 @@ export const SignInView = () => {
                 }
             }
         )
+    }
+
+    const onProvider = (provider: "google" | "github") => {
+        setError(null);
+        setIsPending(true);
+
+        authClient.signIn.social({
+            provider,
+            callbackURL: "/"
+        }, {
+            onSuccess: () => {
+                setIsPending(false);
+            },
+            onError: ({ error }) => {
+                setError(error.message)
+            }
+        });
+
     }
 
     return (
@@ -131,16 +148,18 @@ export const SignInView = () => {
                                     <Button
                                         variant="outline"
                                         type="button"
-                                        className="w-full"
+                                        className="w-full cursor-pointer"
+                                        onClick={() => onProvider("google")}
                                     >
-                                        Google
+                                        <FaGoogle />
                                     </Button>
                                     <Button
                                         variant="outline"
                                         type="button"
-                                        className="w-full"
+                                        className="w-full cursor-pointer"
+                                        onClick={() => onProvider("github")}
                                     >
-                                        Github
+                                        <FaGithub />
                                     </Button>
                                 </div>
                                 <div className="text-center text-sm">
