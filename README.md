@@ -29,13 +29,16 @@ cd comind
 npm install --legacy-peer-deps
 
 #3. Environment variables
-```bash
-DATABASE_URL
-BETTER_AUTH_SECRET
-BETTER_AUTH_URL
-GITHUB_CLIENT_ID
-GITHUB_CLIENT_SECRET
-GOOGLE_CLIENT_ID
-GOOGLE_CLIENT_SECRET
+DATABASE_URL= #your db url
+#better auth setup variables
+BETTER_AUTH_SECRET= #your better auth secret
+BETTER_AUTH_URL= #your better auth url
+
+#better auth oAuth providers
+GITHUB_CLIENT_ID= #your github client id
+GITHUB_CLIENT_SECRET= #your github client secret
+GOOGLE_CLIENT_ID= #your google client id
+GOOGLE_CLIENT_SECRET= #your google client secret
+
 # 3. Run the dev server
 npm run dev
