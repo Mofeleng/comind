@@ -17,8 +17,8 @@ const firstSection = [
     },
     {
         icon: BotIcon,
-        label: "Agents",
-        href: "/agents"
+        label: "Minds",
+        href: "/minds"
     }
 ]
 
