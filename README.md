@@ -39,6 +39,7 @@ GITHUB_CLIENT_ID= #your github client id
 GITHUB_CLIENT_SECRET= #your github client secret
 GOOGLE_CLIENT_ID= #your google client id
 GOOGLE_CLIENT_SECRET= #your google client secret
+NEXT_PUBLIC_APP_URL=#your app url /same as better auth url/
 
 # 3. Run the dev server
 npm run dev
