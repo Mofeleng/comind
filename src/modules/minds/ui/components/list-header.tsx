@@ -1,12 +1,24 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, XCircleIcon } from "lucide-react";
 import { NewMindDialog } from "./new-mind-dialog";
 import { useState } from "react";
+import { useMindsFilter } from "../../hooks/use-minds-filter";
+import { MindsSearchFilter } from "./minds-search-filter";
+import { DEFAULT_PAGE } from "@/constants";
 
 export const MindsListHeader = () => {
     const [isDialogOpen, setDialogOpen] = useState(false);
+    const [ filters, setFilters ] = useMindsFilter();
+    const isFilterModified = !!filters.search;
+
+    const onClearFilters = () => {
+        setFilters({
+            search: "",
+            page: DEFAULT_PAGE
+        })
+    }
 
     return (
         <>
@@ -21,8 +33,21 @@ export const MindsListHeader = () => {
                         onClick={() => setDialogOpen(true)}
                     >
                         <PlusIcon />
-                        Add Mind
+                        New Mind
                     </Button>
+                </div>
+                <div className="flex items-center gap-x-2 p-1">
+                    <MindsSearchFilter />
+                    { isFilterModified && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={onClearFilters}
+                        >
+                            <XCircleIcon />
+                            Clear
+                        </Button>
+                    )}
                 </div>
             </div>
         </>

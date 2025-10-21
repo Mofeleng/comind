@@ -47,7 +47,7 @@ export const columns: ColumnDef<MindData>[] = [
             className="flex items-center gap-x-2 [&>svg]:size-4"
         >
             <VideoIcon className="text-green-700" />
-            { 5 } { row.original.sessionsCount === 1 ? "session" : "sessions" }
+            { row.original.sessionsCount } { row.original.sessionsCount === 1 ? "session" : "sessions" }
         </Badge>
     ))
   }

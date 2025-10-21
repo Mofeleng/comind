@@ -26,7 +26,7 @@ export const MindForm = ({ onCancel, onSucces, initialValues }:Props) => {
 
     const createAgent = useMutation(trpc.minds.create.mutationOptions({
         onSuccess: async () => {
-            await queryClient.invalidateQueries(trpc.minds.getMany.queryOptions());
+            await queryClient.invalidateQueries(trpc.minds.getMany.queryOptions({}));
 
             if (initialValues?.id) {
                 await queryClient.invalidateQueries(trpc.minds.getOne.queryOptions({ id: initialValues.id }))
