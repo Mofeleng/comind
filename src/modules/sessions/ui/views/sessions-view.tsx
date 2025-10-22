@@ -10,8 +10,8 @@ export const SessionsView = () => {
     const { data } = useQuery(trcp.sessions.getMany.queryOptions({}));
 
     return (
-        <div>
-            { JSON.stringify(data?.items )}
+        <div className="overflow-hidden">
+            { JSON.stringify(data, null, 2)}
         </div>
     )
 }
