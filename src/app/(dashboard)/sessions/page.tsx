@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import { SessionsListHeader } from "@/modules/sessions/ui/components/list-header";
 import { SessionsView, SessionsViewError, SessionsViewLoading } from "@/modules/sessions/ui/views/sessions-view";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
@@ -19,13 +20,16 @@ const Page = async () => {
     void queryClient.prefetchQuery(trpc.sessions.getMany.queryOptions({}));
 
     return ( 
-        <HydrationBoundary state={dehydrate(queryClient)}>
-            <Suspense fallback={<SessionsViewLoading />}>
-                <ErrorBoundary fallback={<SessionsViewError />}>
-                    <SessionsView />
-                </ErrorBoundary>
-            </Suspense>
-        </HydrationBoundary>
+        <>
+            <SessionsListHeader />
+            <HydrationBoundary state={dehydrate(queryClient)}>
+                <Suspense fallback={<SessionsViewLoading />}>
+                    <ErrorBoundary fallback={<SessionsViewError />}>
+                        <SessionsView />
+                    </ErrorBoundary>
+                </Suspense>
+            </HydrationBoundary>
+        </>
      );
 }
  

@@ -5,6 +5,7 @@ import z from "zod";
 import { and, count, desc, eq, getTableColumns, ilike, sql } from "drizzle-orm";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
 import { TRPCError } from "@trpc/server";
+import { sessionsInsertSchema, sessionsUpdateSchema } from "../schemas";
 
 export const sessionsRouter = createTRPCRouter({
     getMany: protectedProcedure.input(z.object({
@@ -51,5 +52,25 @@ export const sessionsRouter = createTRPCRouter({
         }
 
         return existingSession;
-    })
+    }),
+    create: protectedProcedure.input(sessionsInsertSchema).mutation(async ({ input, ctx }) => {
+        const [createdSession] = await db.insert(sessions).values({
+            ...input,
+            userId: ctx.auth.user.id
+        }).returning();
+
+        return createdSession;
+    }),
+    update: protectedProcedure.input(sessionsUpdateSchema).mutation(async ({ input, ctx }) => {
+            const [updatedSession] = await db.update(sessions).set(input).where(and(
+                eq(sessions.id, input.id),
+                eq(sessions.userId, ctx.auth.user.id)
+            )).returning();
+    
+            if (!updatedSession) {
+                throw new TRPCError({ code: "NOT_FOUND", message: "Session not found"})
+            }
+    
+            return updatedSession;
+        })
 })
