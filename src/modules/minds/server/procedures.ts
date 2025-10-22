@@ -5,6 +5,7 @@ import { agentsInsertSchema } from "../schemas";
 import z from "zod";
 import { and, count, desc, eq, getTableColumns, ilike, sql } from "drizzle-orm";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
+import { TRPCError } from "@trpc/server";
 export const agentsRouter = createTRPCRouter({
     //TODO: Change getMany to use protected procedure
     getMany: protectedProcedure.input(z.object({
@@ -35,11 +36,20 @@ export const agentsRouter = createTRPCRouter({
             totalPages
         }
     }),
-    getOne: protectedProcedure.input(z.object({id: z.string()})).query(async ({ input }) => {
+    getOne: protectedProcedure.input(z.object({
+        id: z.string()
+    })).query(async ({ input, ctx }) => {
         const [existingMind] = await db.select({
             ...getTableColumns(minds),
             sessionsCount: sql<number>`5`,
-        }).from(minds).where(eq(minds.id, input.id));
+        }).from(minds).where(and(
+            eq(minds.id, input.id),
+            eq(minds.userId, ctx.auth.user.id)
+        ));
+
+        if (!existingMind) {
+            throw new TRPCError({ code: "NOT_FOUND", message: "Mind not found"})
+        }
 
         return existingMind;
     }),
