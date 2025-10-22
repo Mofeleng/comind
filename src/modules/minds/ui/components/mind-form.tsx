@@ -5,7 +5,7 @@ import { MindData } from "../../types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { agentsInsertSchema } from "../../schemas";
+import { mindsInsertSchema } from "../../schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { GeneratedAvatar } from "@/components/generated-avatar";
@@ -24,7 +24,7 @@ export const MindForm = ({ onCancel, onSucces, initialValues }:Props) => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
 
-    const createAgent = useMutation(trpc.minds.create.mutationOptions({
+    const updateMind = useMutation(trpc.minds.update.mutationOptions({
         onSuccess: async () => {
             await queryClient.invalidateQueries(trpc.minds.getMany.queryOptions({}));
 
@@ -38,8 +38,20 @@ export const MindForm = ({ onCancel, onSucces, initialValues }:Props) => {
         },
     }));
 
-    const form = useForm<z.infer<typeof agentsInsertSchema>>({
-        resolver: zodResolver(agentsInsertSchema),
+    const createMind = useMutation(trpc.minds.create.mutationOptions({
+        onSuccess: async () => {
+            await queryClient.invalidateQueries(trpc.minds.getMany.queryOptions({}));
+
+            onSucces?.() //close  dialog
+        },
+        onError: (error) => {
+            toast.error(error.message);
+        },
+    }));
+
+
+    const form = useForm<z.infer<typeof mindsInsertSchema>>({
+        resolver: zodResolver(mindsInsertSchema),
         defaultValues: {
             name: initialValues?.name || "",
             instructions: initialValues?.instructions || ""
@@ -47,13 +59,13 @@ export const MindForm = ({ onCancel, onSucces, initialValues }:Props) => {
     });
 
     const isEdit = !!initialValues?.id; // check if initial values exist, we are editing if id exists
-    const isPending = createAgent.isPending;
+    const isPending = createMind.isPending || updateMind.isPending;
 
-    const onSubmit = (data: z.infer<typeof agentsInsertSchema>) => {
+    const onSubmit = (data: z.infer<typeof mindsInsertSchema>) => {
         if (isEdit) {
-            console.log("TODO: Update agent");
+            updateMind.mutate({ ...data, id: initialValues.id });
         } else {
-            createAgent.mutate(data);
+            createMind.mutate(data);
         }
     }
 

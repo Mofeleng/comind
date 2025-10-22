@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { minds } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import { agentsInsertSchema } from "../schemas";
+import { mindsInsertSchema, mindsUpdateSchema } from "../schemas";
 import z from "zod";
 import { and, count, desc, eq, getTableColumns, ilike, sql } from "drizzle-orm";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
@@ -53,12 +53,38 @@ export const agentsRouter = createTRPCRouter({
 
         return existingMind;
     }),
-    create: protectedProcedure.input(agentsInsertSchema).mutation(async ({ input, ctx }) => {
+    create: protectedProcedure.input(mindsInsertSchema).mutation(async ({ input, ctx }) => {
         const [createdMind] = await db.insert(minds).values({
             ...input,
             userId: ctx.auth.user.id
         }).returning();
 
         return createdMind;
+    }),
+    remove: protectedProcedure.input(z.object({
+        id: z.string()
+    })).mutation(async ({ input, ctx }) => {
+        const [removedMind] = await db.delete(minds).where(and(
+            eq(minds.id, input.id),
+            eq(minds.userId, ctx.auth.user.id)
+        )).returning();
+
+        if (!removedMind) {
+            throw new TRPCError({ code: "NOT_FOUND", message: "Mind not found"})
+        }
+
+        return removedMind;
+    }),
+    update: protectedProcedure.input(mindsUpdateSchema).mutation(async ({ input, ctx }) => {
+        const [updatedMind] = await db.update(minds).set(input).where(and(
+            eq(minds.id, input.id),
+            eq(minds.userId, ctx.auth.user.id)
+        )).returning();
+
+        if (!updatedMind) {
+            throw new TRPCError({ code: "NOT_FOUND", message: "Mind not found"})
+        }
+
+        return updatedMind;
     })
 })
