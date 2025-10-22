@@ -6,7 +6,7 @@ import z from "zod";
 import { and, count, desc, eq, getTableColumns, ilike, sql } from "drizzle-orm";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
 import { TRPCError } from "@trpc/server";
-export const agentsRouter = createTRPCRouter({
+export const mindsRouter = createTRPCRouter({
     //TODO: Change getMany to use protected procedure
     getMany: protectedProcedure.input(z.object({
         page: z.number().default(DEFAULT_PAGE),
