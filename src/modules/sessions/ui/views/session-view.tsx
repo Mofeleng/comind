@@ -10,6 +10,10 @@ import { toast } from "sonner";
 import { useConfirm } from "../../hooks/use-confirm";
 import { UpdateSessionDialog } from "../components/update-session-dialog";
 import { useState } from "react";
+import { UpcomingState } from "../components/upcoming-state";
+import { ActiveState } from "../components/active-state";
+import { CancelledState } from "../components/cancelled-state";
+import { ProcessingState } from "../components/processing-state";
 
 interface Props {
     sessionId: string;
@@ -40,6 +44,13 @@ export const SessionView = ({ sessionId }: Props) => {
 
         await removeSession.mutateAsync({ id: sessionId });
     }
+
+    const isActive = data.status === "active";
+    const isUpcoming = data.status === "upcoming";
+    const isCancelled = data.status === "cancelled";
+    const isCompleted = data.status === "completed";
+    const isProcessing = data.status === "processing";
+
     return (
         <>
             <RemoveConfirmation />
@@ -55,7 +66,25 @@ export const SessionView = ({ sessionId }: Props) => {
                     onEdit={() => setUpdateSessionDialogOpen(true)}
                     onRemove={handleRemoveSession}
                 />
-
+                { isCancelled && 
+                    <CancelledState />
+                }
+                { isUpcoming && 
+                    <UpcomingState 
+                        sessionId={sessionId}
+                        onCancelSession={() => {}}
+                        isCancelling={false}
+                    />
+                }
+                { isActive && 
+                    <ActiveState sessionId={sessionId} />
+                }
+                { isProcessing &&
+                    <ProcessingState />
+                }
+                { isCompleted && 
+                    <div>Completed</div>
+                }
             </div>
         </>
     )
