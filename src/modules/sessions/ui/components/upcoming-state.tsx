@@ -34,7 +34,7 @@ export const UpcomingState = ({ sessionId, onCancelSession, isCancelling }:Props
                     className="w-full lg:auto"
                     disabled={isCancelling}
                 >
-                    <Link href={`/call/${sessionId}}`}>
+                    <Link href={`/call/${sessionId}`}>
                         <VideoIcon />
                         Start Session
                     </Link>
