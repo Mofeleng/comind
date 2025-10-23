@@ -1,12 +1,29 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, XCircleIcon } from "lucide-react";
 import { NewSessionDialog } from "./new-session-dialog";
 import { useState } from "react";
+import { SessionsSearchFilter } from "./sessions-search-filter";
+import { StatusFilter } from "./status-filter";
+import { MindIdFilter } from "./mind-id-filter";
+import { useSessionsFilter } from "../../hooks/use-sessions-filter";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export const SessionsListHeader = () => {
     const [ isDialogOpen, setIsDialogOpen ] = useState(false);
+    const [ filters, setFilters ] = useSessionsFilter();
+
+    const isFilterModified = !!filters.status || !!filters.search || !!filters.mindId;
+
+    const onClearFilters = () => {
+        setFilters({
+            status: null,
+            mindId: "",
+            search: "",
+            page: 1
+        });
+    }
     return (
         <>
             <NewSessionDialog 
@@ -23,8 +40,23 @@ export const SessionsListHeader = () => {
                         New Session
                     </Button>
                 </div>
-                <div className="flex items-center gap-x-2 p-1">
-                </div>
+                <ScrollArea>
+                    <div className="flex items-center gap-x-2 p-1">
+                        <SessionsSearchFilter />
+                        <StatusFilter />
+                        <MindIdFilter />
+                        { isFilterModified && (
+                            <Button
+                                variant="outline"
+                                onClick={onClearFilters}
+                            >
+                                <XCircleIcon className="size-4" />
+                                Clear
+                            </Button>
+                        )}
+                    </div>
+                    <ScrollBar orientation="horizontal" />
+                </ScrollArea>
             </div>
         </>
     )

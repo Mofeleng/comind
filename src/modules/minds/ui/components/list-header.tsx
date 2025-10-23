@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useMindsFilter } from "../../hooks/use-minds-filter";
 import { MindsSearchFilter } from "./minds-search-filter";
 import { DEFAULT_PAGE } from "@/constants";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export const MindsListHeader = () => {
     const [isDialogOpen, setDialogOpen] = useState(false);
@@ -36,19 +37,22 @@ export const MindsListHeader = () => {
                         New Mind
                     </Button>
                 </div>
-                <div className="flex items-center gap-x-2 p-1">
-                    <MindsSearchFilter />
-                    { isFilterModified && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={onClearFilters}
-                        >
-                            <XCircleIcon />
-                            Clear
-                        </Button>
-                    )}
-                </div>
+                <ScrollArea>
+                    <div className="flex items-center gap-x-2 p-1">
+                        <MindsSearchFilter />
+                        { isFilterModified && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={onClearFilters}
+                            >
+                                <XCircleIcon />
+                                Clear
+                            </Button>
+                        )}
+                    </div>
+                    <ScrollBar orientation="horizontal" />
+                </ScrollArea>
             </div>
         </>
     )
