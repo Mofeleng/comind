@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { sessions } from "@/db/schema";
+import { minds, sessions } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import z from "zod";
 import { and, count, desc, eq, getTableColumns, ilike, sql } from "drizzle-orm";
@@ -17,13 +17,18 @@ export const sessionsRouter = createTRPCRouter({
 
         const data = await db.select({
             ...getTableColumns(sessions),
-            sessionsCount: sql<number>`5`,
-        }).from(sessions).where(and(
+            mind: minds,
+            duration: sql<number>`EXTRACT(EPOCH FROM (ended_at - started_at))`.as("duration")
+        }).from(sessions).innerJoin(minds, 
+            eq(sessions.mindId, minds.id)
+        ).where(and(
             eq(sessions.userId, ctx.auth.user.id),
             search ? ilike(sessions.name, `%${search}%`) : undefined
         )).orderBy(desc(sessions.createdAt), desc(sessions.id)).limit(pageSize).offset((page - 1) * pageSize);
 
-        const [total] = await db.select({ count: count() }).from(sessions).where(and(
+        const [total] = await db.select({ count: count() }).from(sessions).innerJoin(minds, 
+            eq(sessions.mindId, minds.id)
+        ).where(and(
             eq(sessions.userId, ctx.auth.user.id),
             search ? ilike(sessions.name, `%${search}%`) : undefined
         ));

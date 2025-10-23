@@ -1,17 +1,29 @@
 "use client";
 
+import { DataTable } from "@/components/data-table";
 import { ErrorState } from "@/components/error-state";
 import { LoadingState } from "@/components/loading-state";
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { columns } from "../components/columns";
+import { EmptyState } from "@/components/empty-state";
 
 export const SessionsView = () => {
     const trcp = useTRPC();
-    const { data } = useQuery(trcp.sessions.getMany.queryOptions({}));
+    const { data } = useSuspenseQuery(trcp.sessions.getMany.queryOptions({}));
 
     return (
-        <div className="overflow-hidden">
-            { JSON.stringify(data, null, 2)}
+        <div className="flex-1 pb-4 px-4 md:px-8 flex-col gap-y-4">
+            <DataTable 
+                data={data.items}
+                columns={columns}
+            />
+            { data.items.length === 0 && (
+                <EmptyState 
+                    title="No sessions found"
+                    description="Create a session to collaborate with minds, and other users"
+                />
+            )}
         </div>
     )
 }
