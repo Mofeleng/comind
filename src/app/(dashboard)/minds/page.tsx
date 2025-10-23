@@ -7,7 +7,7 @@ import { MindsListHeader } from "@/modules/minds/ui/components/list-header";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { SearchParams } from "nuqs";
+import { SearchParams } from "nuqs/server";
 import { loadSearchParams } from "@/modules/minds/params";
 
 interface Props {
