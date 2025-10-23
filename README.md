@@ -27,6 +27,7 @@ cd comind
 
 # 2. Install dependencies
 npm install --legacy-peer-deps
+#On local development make sure to replace the package.json script titled "dev:webhook" with your own static ngrok url for webhooks on local environments
 
 #3. Environment variables
 DATABASE_URL= #your db url
@@ -42,6 +43,7 @@ GOOGLE_CLIENT_SECRET= #your google client secret
 NEXT_PUBLIC_APP_URL=#your app url /same as better auth url/
 NEXT_PUBLIC_STREAM_VIDEO_API_KEY=#Getstream.io video api key
 STREAM_VIDEO_API_SECRET=#getstream.io video api secret
+OPENAI_API_KEY=#your open ai api key
 
 # 3. Run the dev server
 npm run dev
