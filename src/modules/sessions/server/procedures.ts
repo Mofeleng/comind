@@ -54,8 +54,9 @@ export const sessionsRouter = createTRPCRouter({
     })).query(async ({ input, ctx }) => {
         const [existingSession] = await db.select({
             ...getTableColumns(sessions),
-            sessionsCount: sql<number>`5`,
-        }).from(sessions).where(and(
+            mind: minds,
+            duration: sql<number>`EXTRACT(EPOCH FROM (ended_at - started_at))`.as("duration")
+        }).from(sessions).innerJoin(minds, eq(sessions.mindId, minds.id)).where(and(
             eq(sessions.id, input.id),
             eq(sessions.userId, ctx.auth.user.id)
         ));
@@ -75,15 +76,30 @@ export const sessionsRouter = createTRPCRouter({
         return createdSession;
     }),
     update: protectedProcedure.input(sessionsUpdateSchema).mutation(async ({ input, ctx }) => {
-            const [updatedSession] = await db.update(sessions).set(input).where(and(
-                eq(sessions.id, input.id),
-                eq(sessions.userId, ctx.auth.user.id)
-            )).returning();
+        const [updatedSession] = await db.update(sessions).set(input).where(and(
+            eq(sessions.id, input.id),
+            eq(sessions.userId, ctx.auth.user.id)
+        )).returning();
+
+        if (!updatedSession) {
+            throw new TRPCError({ code: "NOT_FOUND", message: "Session not found"})
+        }
+
+        return updatedSession;
+    }),
+    remove: protectedProcedure.input(z.object({
+        id: z.string()
+    })).mutation(async ({ input, ctx }) => {
+        const [ removedSession] = await db.delete(sessions).where(and(
+            eq(sessions.id, input.id),
+            eq(sessions.userId, ctx.auth.user.id)
+        )).returning();
+
+        if (!removedSession) {
+            throw new TRPCError({ code: "NOT_FOUND", message: "Session not found"})
+        }
+
+        return removedSession;
+    })
     
-            if (!updatedSession) {
-                throw new TRPCError({ code: "NOT_FOUND", message: "Session not found"})
-            }
-    
-            return updatedSession;
-        })
 })

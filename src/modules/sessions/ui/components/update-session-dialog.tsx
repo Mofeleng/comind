@@ -1,28 +1,26 @@
 import { ResponsiveDialog } from "@/components/responsive-dialog";
 import { SessionForm } from "./session-form";
-import { useRouter } from "next/navigation";
+import { SessionData } from "../../types";
 
 interface Props {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    initialValues: SessionData;
 }
 
-export const NewSessionDialog = ({open, onOpenChange}:Props) => {
-    const router = useRouter();
+export const UpdateSessionDialog = ({open, onOpenChange, initialValues }:Props) => {
 
     return (
         <ResponsiveDialog
-            title="New Session"
-            description="Create a new session to collaborate with your minds"
+            title="Edit Session"
+            description="Update your session details"
             open={open}
             onOpenChange={onOpenChange}
         >
             <SessionForm
-                onSucces={(id) => {
-                    onOpenChange(false);
-                    router.push(`/sessions/${id}`);
-                }}
+                onSucces={() => {onOpenChange(false);}}
                 onCancel={() => onOpenChange(false)}
+                initialValues={initialValues}
             />
         </ResponsiveDialog>
     )
