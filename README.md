@@ -40,6 +40,8 @@ GITHUB_CLIENT_SECRET= #your github client secret
 GOOGLE_CLIENT_ID= #your google client id
 GOOGLE_CLIENT_SECRET= #your google client secret
 NEXT_PUBLIC_APP_URL=#your app url /same as better auth url/
+NEXT_PUBLIC_STREAM_VIDEO_API_KEY=#Getstream.io video api key
+STREAM_VIDEO_API_SECRET=#getstream.io video api secret
 
 # 3. Run the dev server
 npm run dev
