@@ -4,12 +4,12 @@ import { ErrorState } from "@/components/error-state";
 import { LoadingState } from "@/components/loading-state";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { DataTable } from "../components/data-table";
 import { columns } from "../components/columns";
 import { EmptyState } from "@/components/empty-state";
 import { useMindsFilter } from "../../hooks/use-minds-filter";
 import { DataPagination } from "../components/data-pagination";
 import { useRouter } from "next/navigation";
+import { DataTable } from "@/components/data-table";
 
 export const MindsView = () => {
     const [ filters, setFilters ] = useMindsFilter();
@@ -33,7 +33,7 @@ export const MindsView = () => {
             />
             { data.items.length === 0 && (
                 <EmptyState 
-                    title="Create your first mind"
+                    title="No minds available"
                     description="Create a mind to join your meetings, each mind will follow your instructions and interact with you or members of your sessions."
                 />
             )}
