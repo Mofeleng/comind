@@ -1,8 +1,9 @@
 
 import { db } from "@/db";
 import { minds, sessions } from "@/db/schema";
+import { inngest } from "@/inngest/client";
 import { StreamVideo } from "@/lib/stream-video";
-import { CallSessionParticipantLeftEvent, CallSessionStartedEvent } from "@stream-io/node-sdk";
+import { CallEndedEvent, CallRecordingReadyEvent, CallSessionParticipantLeftEvent, CallSessionStartedEvent, CallTranscriptionReadyEvent } from "@stream-io/node-sdk";
 import { and, eq, not } from "drizzle-orm";
 import { NextResponse, NextRequest } from "next/server";
 
@@ -86,6 +87,49 @@ export async function POST(req: NextRequest) {
 
         const call = StreamVideo.video.call("default", sessionId);
         await call.end();
+    } else if (eventType === "call.session_ended") {
+        const event = payload as CallEndedEvent;
+        const sessionId = event.call.custom?.sessionId;
+
+        if (!sessionId) {
+            return NextResponse.json({ error: "Session not found"}, { status: 404 });
+        }
+
+        await db.update(sessions).set({
+            status: "processing",
+            endedAt: new Date()
+        }).where(and(
+            eq(sessions.id, sessionId),
+            eq(sessions.status, "active")
+        ));
+    } else if (eventType === "call.transcription_ready") {
+        const event = payload as CallTranscriptionReadyEvent;
+        const sessionId = event.call_cid.split(":")[1];
+
+        const [updatedSession] = await db.update(sessions).set({
+            transcriptUrl: event.call_transcription.url
+        }).where(eq(sessions.id, sessionId)).returning();
+
+        //TODO: Call ingest bg job to summarise transcription
+        if (!updatedSession) {
+            return NextResponse.json({ error: "Session not found"}, { status: 404 });
+        }
+
+        await inngest.send({
+            name: "sessions/processing",
+            data: {
+                sessionId: updatedSession.id,
+                transcriptUrl: updatedSession.transcriptUrl
+            }
+        });
+        
+    } else if (eventType === "call.recording_ready") {
+         const event = payload as CallRecordingReadyEvent;
+        const sessionId = event.call_cid.split(":")[1];
+
+        await db.update(sessions).set({
+            recordingUrl: event.call_recording.url
+        }).where(eq(sessions.id, sessionId))
     }
 
     return NextResponse.json({ status: "ok" })
