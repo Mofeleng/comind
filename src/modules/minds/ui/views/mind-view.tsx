@@ -29,6 +29,7 @@ export const MindView = ({mindId}:Props) => {
     const removeMind = useMutation(trpc.minds.remove.mutationOptions({
         onSuccess: async () => {
             await queryClient.invalidateQueries(trpc.minds.getMany.queryOptions({}));
+            await queryClient.invalidateQueries(trpc.premium.getFreeUsage.queryOptions())
 
             router.push(`/minds`)
         },

@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Props {
     onSucces?: () => void;
@@ -23,6 +24,7 @@ interface Props {
 export const MindForm = ({ onCancel, onSucces, initialValues }:Props) => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
+    const router = useRouter();
 
     const updateMind = useMutation(trpc.minds.update.mutationOptions({
         onSuccess: async () => {
@@ -41,11 +43,14 @@ export const MindForm = ({ onCancel, onSucces, initialValues }:Props) => {
     const createMind = useMutation(trpc.minds.create.mutationOptions({
         onSuccess: async () => {
             await queryClient.invalidateQueries(trpc.minds.getMany.queryOptions({}));
-
+            await queryClient.invalidateQueries(trpc.premium.getFreeUsage.queryOptions())
             onSucces?.() //close  dialog
         },
         onError: (error) => {
             toast.error(error.message);
+            if (error.data?.code === "FORBIDDEN") {
+                router.push("/upgrade");
+            }
         },
     }));
 

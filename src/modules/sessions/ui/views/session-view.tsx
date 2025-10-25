@@ -29,8 +29,10 @@ export const SessionView = ({ sessionId }: Props) => {
     const [ updateSessionDialogOpen, setUpdateSessionDialogOpen ] = useState(false);
 
     const removeSession = useMutation(trcp.sessions.remove.mutationOptions({
-        onSuccess: () => {
-            queryClient.invalidateQueries(trcp.sessions.getMany.queryOptions({}));
+        onSuccess: async () => {
+            await queryClient.invalidateQueries(trcp.sessions.getMany.queryOptions({}));
+            await queryClient.invalidateQueries(trcp.premium.getFreeUsage.queryOptions())
+
             router.push('/sessions');
         },
         onError: (error) => {

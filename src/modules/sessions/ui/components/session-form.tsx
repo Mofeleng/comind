@@ -15,6 +15,7 @@ import { useState } from "react";
 import { CommandSelect } from "./command-select";
 import { GeneratedAvatar } from "@/components/generated-avatar";
 import { NewMindDialog } from "@/modules/minds/ui/components/new-mind-dialog";
+import { useRouter } from "next/navigation";
 
 interface Props {
     onSucces?: (id?:string) => void;
@@ -25,7 +26,8 @@ interface Props {
 export const SessionForm = ({ onCancel, onSucces, initialValues }:Props) => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
-
+    const router = useRouter();
+    
     const [ mindSearch, setMindSearch ] = useState("");
     const [ openNewMindDialog, setOpenNewMindDialog ] = useState(false);
 
@@ -51,11 +53,15 @@ export const SessionForm = ({ onCancel, onSucces, initialValues }:Props) => {
     const createSession = useMutation(trpc.sessions.create.mutationOptions({
         onSuccess: async (data) => {
             await queryClient.invalidateQueries(trpc.sessions.getMany.queryOptions({}));
+            await queryClient.invalidateQueries(trpc.premium.getFreeUsage.queryOptions())
 
             onSucces?.(data.id) //close  dialog
         },
         onError: (error) => {
             toast.error(error.message);
+            if (error.data?.code === "FORBIDDEN") {
+                router.push("/upgrade");
+            }
         },
     }));
 
