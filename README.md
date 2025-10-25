@@ -1,21 +1,20 @@
-````markdown
-# 🧠 CoMind
+# CoMind
 
-**CoMind** is an **AI-powered meeting platform** that enables users to **create, manage, and interact with custom conversational agents** in real time.  
+**CoMind** is an **AI-powered meeting platform** that enables users to **create, manage, and interact with custom conversational agents** in real time.
 It seamlessly integrates the **Stream SDK** for live communication and the **OpenAI Realtime API** for dynamic reasoning — optimized for collaborative, intelligent meeting environments.
 
 ---
 
-## 🚀 Tech Stack
+## Tech Stack
 
-| Layer | Technology | Purpose |
-|:------|:------------|:--------|
-| **Framework** | [Next.js 15.3.2](https://nextjs.org/) | App Router, edge-optimized rendering |
-| **UI / Styling** | [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui 2.5.0](https://ui.shadcn.com/) | Modern, accessible component system |
-| **AI / Realtime** | [OpenAI Realtime API](https://platform.openai.com/docs/guides/realtime) | Live agent reasoning and streaming responses |
-| **Communication** | [Stream SDK](https://getstream.io/) | Real-time voice and data synchronization |
-| **Auth** | [Better Auth](https://better-auth.com/) | Secure multi-provider authentication |
-| **Database** | [NeonDB](https://neon.tech/) + [Postgres](https://www.postgresql.org/) + [Drizzle ORM](https://orm.drizzle.team/) | Persistent user, agent, and session data |
+| Layer             | Technology                                                                                                        | Purpose                                      |
+| :---------------- | :---------------------------------------------------------------------------------------------------------------- | :------------------------------------------- |
+| **Framework**     | [Next.js 15.3.2](https://nextjs.org/)                                                                             | App Router, edge-optimized rendering         |
+| **UI / Styling**  | [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui 2.5.0](https://ui.shadcn.com/)                              | Modern, accessible component system          |
+| **AI / Realtime** | [OpenAI Realtime API](https://platform.openai.com/docs/guides/realtime)                                           | Live agent reasoning and streaming responses |
+| **Communication** | [Stream SDK](https://getstream.io/)                                                                               | Real-time voice and data synchronization     |
+| **Auth**          | [Better Auth](https://better-auth.com/)                                                                           | Secure multi-provider authentication         |
+| **Database**      | [NeonDB](https://neon.tech/) + [Postgres](https://www.postgresql.org/) + [Drizzle ORM](https://orm.drizzle.team/) | Persistent user, agent, and session data     |
 
 ---
 
@@ -23,14 +22,14 @@ It seamlessly integrates the **Stream SDK** for live communication and the **Ope
 
 ### 1️⃣ Clone the Repository
 
-```bash
+```
 git clone https://github.com/yourusername/comind.git
 cd comind
-````
+```
 
 ### 2️⃣ Install Dependencies
 
-```bash
+```
 npm install --legacy-peer-deps
 ```
 
@@ -43,7 +42,7 @@ npm install --legacy-peer-deps
 
 Create a `.env` file in the project root and include the following:
 
-```bash
+```
 # Database
 DATABASE_URL= # NeonDB connection string
 
@@ -77,7 +76,7 @@ POLAR_ACCESS_TOKEN= # Polar.sh access token for funding integration
 
 ### 4️⃣ Start the Development Server
 
-```bash
+```
 npm run dev
 ```
 
@@ -96,6 +95,7 @@ http://localhost:3000
 * 🔐 **Secure Auth System:** Multi-provider login via Better Auth
 * 🗄️ **Robust Data Layer:** Scalable and efficient Postgres setup via Drizzle ORM
 * ⚡ **Edge-Ready Architecture:** Built on Next.js 15 for performance and scalability
+
 ---
 
 ## 🧪 Development Notes
@@ -111,7 +111,7 @@ http://localhost:3000
 Contributions are welcome!
 To get started:
 
-```bash
+```
 # Fork the repository
 # Create a new branch
 git checkout -b feature/your-feature-name
@@ -124,10 +124,3 @@ git push origin feature/your-feature-name
 ```
 
 Then open a **Pull Request** 🚀
-
----
-
-### 🧠 CoMind — “Collaborate Smarter. Think Together.”
-
-```
-```
