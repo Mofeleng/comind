@@ -43,6 +43,8 @@ GOOGLE_CLIENT_SECRET= #your google client secret
 NEXT_PUBLIC_APP_URL=#your app url /same as better auth url/
 NEXT_PUBLIC_STREAM_VIDEO_API_KEY=#Getstream.io video api key
 STREAM_VIDEO_API_SECRET=#getstream.io video api secret
+NEXT_PUBLIC_STREAM_CHAT_API_KEY=#same as NEXT_PUBLIC_STREAM_VIDEO_API_KEY
+STREAM_CHAT_SECRET_KEY=#same as STREAM_VIDEO_API_SECRET
 OPENAI_API_KEY=#your open ai api key
 
 # 3. Run the dev server
