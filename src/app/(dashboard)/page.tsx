@@ -10,6 +10,8 @@ const Page = async () => {
 
   if (!session) {
     redirect("/auth/sign-in")
+  } else {
+    redirect("/sessions");
   }
   
   return <HomeView />;

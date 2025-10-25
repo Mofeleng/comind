@@ -1,9 +1,9 @@
 import { db } from "@/db";
-import { minds } from "@/db/schema";
+import { minds, sessions } from "@/db/schema";
 import { createTRPCRouter, premiumProcedure, protectedProcedure } from "@/trpc/init";
 import { mindsInsertSchema, mindsUpdateSchema } from "../schemas";
 import z from "zod";
-import { and, count, desc, eq, getTableColumns, ilike, sql } from "drizzle-orm";
+import { and, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
 import { TRPCError } from "@trpc/server";
 export const mindsRouter = createTRPCRouter({
@@ -17,7 +17,7 @@ export const mindsRouter = createTRPCRouter({
 
         const data = await db.select({
             ...getTableColumns(minds),
-            sessionsCount: sql<number>`5`,
+            sessionsCount: db.$count(sessions, eq(minds.id, sessions.mindId)),
         }).from(minds).where(and(
             eq(minds.userId, ctx.auth.user.id),
             search ? ilike(minds.name, `%${search}%`) : undefined
@@ -41,7 +41,7 @@ export const mindsRouter = createTRPCRouter({
     })).query(async ({ input, ctx }) => {
         const [existingMind] = await db.select({
             ...getTableColumns(minds),
-            sessionsCount: sql<number>`5`,
+            sessionsCount: db.$count(sessions, eq(minds.id, sessions.mindId)),
         }).from(minds).where(and(
             eq(minds.id, input.id),
             eq(minds.userId, ctx.auth.user.id)

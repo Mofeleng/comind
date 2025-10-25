@@ -75,8 +75,6 @@ export const SessionView = ({ sessionId }: Props) => {
                 { isUpcoming && 
                     <UpcomingState 
                         sessionId={sessionId}
-                        onCancelSession={() => {}}
-                        isCancelling={false}
                     />
                 }
                 { isActive && 
