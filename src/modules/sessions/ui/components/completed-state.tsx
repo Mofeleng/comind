@@ -8,6 +8,8 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { formatDuration } from "@/lib/utils";
 import Markdown from "react-markdown";
+import { Transcript } from "./transcript";
+import { ChatProvider } from "./chat-provider";
 
 interface Props {
     data: SessionData;
@@ -69,6 +71,12 @@ export const CompletedState = ({ data }:Props) => {
                         }
                         
                     </div>
+                </TabsContent>
+                <TabsContent value="transcript">
+                    <Transcript sessionId={data.id} />
+                </TabsContent>
+                <TabsContent value="chat">
+                    <ChatProvider sessionId={data.id} sessionName={data.name} />
                 </TabsContent>
                 <TabsContent value="summary">
                     <div className="rounded-lg bg-white border">
