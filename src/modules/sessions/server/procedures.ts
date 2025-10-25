@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { minds, sessions, user } from "@/db/schema";
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+import { createTRPCRouter, premiumProcedure, protectedProcedure } from "@/trpc/init";
 import z from "zod";
 import { and, count, desc, eq, getTableColumns, ilike, inArray, sql } from "drizzle-orm";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
@@ -71,7 +71,7 @@ export const sessionsRouter = createTRPCRouter({
 
         return existingSession;
     }),
-    create: protectedProcedure.input(sessionsInsertSchema).mutation(async ({ input, ctx }) => {
+    create: premiumProcedure("sessions").input(sessionsInsertSchema).mutation(async ({ input, ctx }) => {
         const [createdSession] = await db.insert(sessions).values({
             ...input,
             userId: ctx.auth.user.id

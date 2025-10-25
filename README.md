@@ -46,6 +46,7 @@ STREAM_VIDEO_API_SECRET=#getstream.io video api secret
 NEXT_PUBLIC_STREAM_CHAT_API_KEY=#same as NEXT_PUBLIC_STREAM_VIDEO_API_KEY
 STREAM_CHAT_SECRET_KEY=#same as STREAM_VIDEO_API_SECRET
 OPENAI_API_KEY=#your open ai api key
+POLAR_ACCESS_TOKEN=#Your polar.sh access token
 
 # 3. Run the dev server
 npm run dev

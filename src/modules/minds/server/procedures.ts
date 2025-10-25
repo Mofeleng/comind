@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { minds } from "@/db/schema";
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+import { createTRPCRouter, premiumProcedure, protectedProcedure } from "@/trpc/init";
 import { mindsInsertSchema, mindsUpdateSchema } from "../schemas";
 import z from "zod";
 import { and, count, desc, eq, getTableColumns, ilike, sql } from "drizzle-orm";
@@ -53,7 +53,7 @@ export const mindsRouter = createTRPCRouter({
 
         return existingMind;
     }),
-    create: protectedProcedure.input(mindsInsertSchema).mutation(async ({ input, ctx }) => {
+    create: premiumProcedure("minds").input(mindsInsertSchema).mutation(async ({ input, ctx }) => {
         const [createdMind] = await db.insert(minds).values({
             ...input,
             userId: ctx.auth.user.id
